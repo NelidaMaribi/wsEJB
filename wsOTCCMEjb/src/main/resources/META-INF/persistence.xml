@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+    version="2.0">
+
+    <persistence-unit name="DS_JOB_OT">
+    	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<!--         <jta-data-source>jdbc/DS_ASESOR</jta-data-source> -->
+<!--         <jta-data-source>java:/DS_ASESOR</jta-data-source> -->
+        <jta-data-source>java:jboss/jdbc/DS_JOB_OT</jta-data-source>
+<!--        <jta-data-source>java:jboss/jdbc/DS_ASESOR</jta-data-source>  -->
+
+                <exclude-unlisted-classes>false</exclude-unlisted-classes>
+                <properties>
+                    <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+                    <property name="hibernate.jpa.compliance.global_id_generators" value="true"/>
+                    <property name="hibernate.proc.param_null_passing" value="true" />
+                    <property name="hibernate.jta.allowTransactionAccess" value="true" />
+                    <property name="hibernate.id.new_generator_mappings" value="false" />
+                    <property name="tomee.jpa.factory.lazy" value="true" />
+                </properties>
+
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<dependencies>
+			<module name="org.slf4j.log4j12" />
+			<module name="com.oracle.ojdbc7" />
+			<module name="org.apache.commons.lang3" />
+			<module name="com.fasterxml.jackson.core.jackson-annotations" />
+			
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure> 

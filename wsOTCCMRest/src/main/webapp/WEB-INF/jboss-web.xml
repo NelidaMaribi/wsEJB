@@ -1,0 +1,5 @@
+
+<jboss-web>
+	<context-root>/wsOTCCM</context-root>
+</jboss-web>
+

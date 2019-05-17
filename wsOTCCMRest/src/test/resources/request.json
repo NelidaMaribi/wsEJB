@@ -1,0 +1,84 @@
+
+{
+  "producto": {
+    "ideProducto": " 2288",
+    "descProducto": "WEB VEHICULOS"
+  },
+  "canal": {
+    "ideCanal": " 19403",
+    "descCanal": " MARSH PERU S.A."
+  },
+  "usuario": "KCEVALLOSM",
+  "idePlan": "230325",
+  "numPoliza": "230325",
+  "ideVendedor": "3676263031",
+  "tipoVigencia": "A",
+  "fechaIniVigencia": "2018/04/20",
+  "fechaFinVigencia": "2019/04/20",
+  "idpMoneda": "USD",
+  "datosParticulares": [
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "PLACA_DE_RODAJE",
+      "valor": "SIN DATO",
+      "numOrden": 1
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "CLASES_DE_VEHICULOS",
+      "valor": "001",
+      "numOrden": 4
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "TIPOS_DE_VEHICULOS",
+      "valor": "001000",
+      "numOrden": 5
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "MARCAS_DE_VEHICULOS",
+      "valor": "403",
+      "numOrden": 6
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "MODELOS_DE_VEHICULOS",
+      "valor": "403255",
+      "numOrden": 7
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "USOS_DE_VEHICULOS",
+      "valor": "001",
+      "numOrden": 8
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "NRO_PASAJEROS",
+      "valor": "5",
+      "numOrden": 11
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "WEB_ANOS_DE_FABRICACION",
+      "valor": "2016",
+      "numOrden": 12
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "WEB_TIMON_CAMBIADO",
+      "valor": "NO",
+      "numOrden": 13
+    },
+    {
+      "codRamo": "WEB VEHICULOS",
+      "nombre": "SUMA_ASEGURADA",
+      "valor": "15000",
+      "numOrden": 14
+    }
+  ],
+  "ip": "127.0.0.1",
+  "fechaTransferencia": "2018/02/01",
+  "horaTransferencia": "06:36:00"
+  }
