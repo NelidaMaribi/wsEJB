@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import main.UtilTripleDes;
 import pe.soapros.generacionccm.beans.Origen;
 import pe.soapros.generacionccm.beans.ResponseFlujoCS;
 import pe.soapros.generacionccm.beans.ResponseTokenCS;
@@ -57,9 +58,10 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 		String url = appProperties.getProperty("preview.url");
 		String name = appProperties.getProperty("preview.name");
 		String version = appProperties.getProperty("preview.version");
+		String key = appProperties.getProperty("cs.key");
 		String async = "false";
 		
-		String rpta = executeFlujoUnico(url, name, version, "POST", strSolicitud, async);
+		String rpta = executeFlujoUnico(url, name, version, "POST", strSolicitud, key, async);
 		
 		ResponseFlujoCS response = mapper.readValue(rpta, ResponseFlujoCS.class);		
 		logger.debug("PREVIEW CLASS: " + response.toString());
@@ -81,9 +83,10 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 		String url = appProperties.getProperty("flujo.url");
 		String name = appProperties.getProperty("flujo.name");
 		String version = appProperties.getProperty("flujo.version");
+		String key = appProperties.getProperty("cs.key");
 		String async = "true";
 		
-		String rpta = executeFlujoUnico(url, name, version, "POST", strSolicitud, async);
+		String rpta = executeFlujoUnico(url, name, version, "POST", strSolicitud, key, async);
 		
 		ResponseFlujoCS response = mapper.readValue(rpta, ResponseFlujoCS.class);
 		
@@ -97,7 +100,7 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 		return respuesta;
 	}
 	
-	private String executeFlujoUnico(String urlFlujo, String name, String version, String method, String solicitud, String async) throws Exception {
+	private String executeFlujoUnico(String urlFlujo, String name, String version, String method, String solicitud, String key, String async) throws Exception {
 		
 		urlFlujo += "?name="+name+"&version="+version+"&async=" + async;
 		
@@ -135,7 +138,8 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 				+ "\"contentType\": \"application/json\","
 				+"\"data\": \""+ new String(arreglo) +"\""
 				+ "},"
-				+"\"PubFileName\": \"" + dcto.getResourceid() + "\""
+				+"\"PubFileName\": \"" + dcto.getResourceid() + "\", "
+				+"\"Key\": \"" + key + "\""
 				+ "}";
 		
 		logger.debug("TOKEN: " + rptaToken.getTicket());
@@ -175,7 +179,9 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 		Properties appProperties = AppProperties.getExternalProperties(appPropertiesPath);
 		String token = appProperties.get("token.url").toString();
 		String usuario = appProperties.get("token.usuario").toString();
-		String password = appProperties.get("token.password").toString();
+		//String password = appProperties.get("token.password").toString();
+		String passwordEncriptado = System.getProperty("VAR_PASS_OTADMIN");
+		String password = String.valueOf(UtilTripleDes.decrypt(passwordEncriptado));
 		
 		String respuesta = executeToken(token, usuario, password, "POST");
 		if (respuesta == null) {

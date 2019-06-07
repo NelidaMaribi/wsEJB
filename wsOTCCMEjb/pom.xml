@@ -1,140 +1,135 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>pe.soapros</groupId>
-        <artifactId>wsOTCCMParent</artifactId>
-        <version>2.0.0</version>
-    </parent>
-    <artifactId>wsOTCCMEjb</artifactId>
-    <packaging>ejb</packaging>
-    <name>wsOTCCMEjb</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pe.soapros</groupId>
+		<artifactId>wsOTCCMParent</artifactId>
+		<version>2.0.0</version>
+	</parent>
+	<artifactId>wsOTCCMEjb</artifactId>
+	<packaging>ejb</packaging>
+	<name>wsOTCCMEjb</name>
 
-    <properties>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <version.ejb.plugin>3.0.0</version.ejb.plugin>
-        <version.ejb>3.2</version.ejb>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.javaee>8.0</version.javaee>
-        <version.hibernate>5.2.12.Final</version.hibernate>
-        <version.validation>2.0.1.Final</version.validation>
-    </properties>
+	<properties>
+		<endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+		<version.ejb.plugin>3.0.0</version.ejb.plugin>
+		<version.ejb>3.2</version.ejb>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.javaee>8.0</version.javaee>
+		<version.hibernate>5.2.12.Final</version.hibernate>
+		<version.validation>2.0.1.Final</version.validation>
+	</properties>
 
-    <dependencies>
-    	<!-- Dependencia validation-api 
+	<dependencies>
+		<!-- Dependencia validation-api <dependency> <groupId>javax.validation</groupId> 
+			<artifactId>validation-api</artifactId> <version>${version.validation}</version> 
+			<scope>provided</scope> </dependency> -->
 		<dependency>
-		    <groupId>javax.validation</groupId>
-		    <artifactId>validation-api</artifactId>
-		    <version>${version.validation}</version>
-		    <scope>provided</scope>
+        	<groupId>rimac</groupId>
+        	<artifactId>rimac</artifactId>
+        	<version>1.1.1</version>
+    	</dependency>
+		<!-- Dependencias CDI -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
-		-->
-    
-        <!-- Dependencias CDI -->
-        <dependency>
-            <groupId>org.jboss.spec.javax.ejb</groupId>
-            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
-            <version>1.0.0.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencias API REST -->
-        <dependency>
-            <groupId>org.jboss.spec.javax.ws.rs</groupId>
-            <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-            <version>1.0.0.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencias JPA -->
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>1.0.0.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencias Utilitarias -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencias Log -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.22</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.8.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Dependencias Driver BD -->
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
-            <version>12.1.0.1</version>  
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.2.13.Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.6</version>
-            <scope>provided</scope>
-        </dependency>
-	<!--  
-        <dependency>
-			<groupId>com.rimac.api.culqui</groupId>
-			<artifactId>APICulquiEjb</artifactId>
-			<version>1.0.0</version>
+		<!-- Dependencias API REST -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.ws.rs</groupId>
+			<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
-	-->
-    </dependencies>
+		<!-- Dependencias JPA -->
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Dependencias Utilitarias -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Dependencias Log -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.22</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.8.9</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Dependencias Driver BD -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>5.2.13.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
 
-<!--     <repositories> -->
-<!--         <repository> -->
-<!--             <id>rimac-central-releases</id> -->
-<!--             <name>rimac-central</name> -->
-<!--             <url>https://nexus.rimaclabs.xyz/repository/rimac-central</url> -->
-<!--         </repository> -->
-<!--         <repository> -->
-<!--             <id>rimac-legacy-releases</id> -->
-<!--             <name>rimac-legacy</name> -->
-<!--             <url>https://nexus.rimaclabs.xyz/repository/rimac-legacy</url> -->
-<!--         </repository> -->
-<!--     </repositories> -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency> <groupId>com.rimac.api.culqui</groupId> <artifactId>APICulquiEjb</artifactId> 
+			<version>1.0.0</version> </dependency> -->
+	</dependencies>
+
+	<!-- <repositories> -->
+	<!-- <repository> -->
+	<!-- <id>rimac-central-releases</id> -->
+	<!-- <name>rimac-central</name> -->
+	<!-- <url>https://nexus.rimaclabs.xyz/repository/rimac-central</url> -->
+	<!-- </repository> -->
+	<!-- <repository> -->
+	<!-- <id>rimac-legacy-releases</id> -->
+	<!-- <name>rimac-legacy</name> -->
+	<!-- <url>https://nexus.rimaclabs.xyz/repository/rimac-legacy</url> -->
+	<!-- </repository> -->
+	<!-- </repositories> -->
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ejb-plugin</artifactId>
-                <version>${version.ejb.plugin}</version>
-                <configuration>
-                    <ejbVersion>${version.ejb}</ejbVersion>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${version.ejb.plugin}</version>
+				<configuration>
+					<ejbVersion>${version.ejb}</ejbVersion>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
