@@ -15,6 +15,7 @@ public class Cabecera implements Serializable {
 	private DetalleTrazabilidad detalleTrazabilidad;
 	private DetalleSMS EnvioSMS;	
 	private AlmacenamientoFilenet almacenamientoFilenet;
+	private AlmacenamientoLocal almacenamientoLocal;
 	private DetalleServicio detalleServicio;
 	
 	public AlmacenamientoS3 getAlmacenamientoS3() {
@@ -67,16 +68,24 @@ public class Cabecera implements Serializable {
 	}
 	public void setDetalleTrazabilidad(DetalleTrazabilidad detalleTrazabilidad) {
 		this.detalleTrazabilidad = detalleTrazabilidad;
+	}	
+	
+	
+	public AlmacenamientoLocal getAlmacenamientoLocal() {
+		return almacenamientoLocal;
 	}
-	
-	
+	public void setAlmacenamientoLocal(AlmacenamientoLocal almacenamientoLocal) {
+		this.almacenamientoLocal = almacenamientoLocal;
+	}
 	@Override
 	public String toString() {
-		return "Cabecera [detallepdf=" + detallePDF + ", detalleTXT=" + detalleTXT + ", detalleHTML=" + detalleHTML
-				+ ", EnvioSMS=" + EnvioSMS + ", detalleTrazabilidad=" + detalleTrazabilidad + ", detalleServicio="
-				+ detalleServicio + ", almacenamientoS3=" + almacenamientoS3 + ", almacenamientoFilenet="
-				+ almacenamientoFilenet + "]";
+		return "Cabecera [detallePDF=" + detallePDF + ", detalleTXT=" + detalleTXT + ", detalleHTML=" + detalleHTML
+				+ ", almacenamientoS3=" + almacenamientoS3 + ", detalleTrazabilidad=" + detalleTrazabilidad
+				+ ", EnvioSMS=" + EnvioSMS + ", almacenamientoFilenet=" + almacenamientoFilenet
+				+ ", almacenamientoLocal=" + almacenamientoLocal + ", detalleServicio=" + detalleServicio + "]";
 	}
+
+	
 		
 	
 }

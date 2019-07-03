@@ -3,9 +3,6 @@
         <wb-resource deploy-path="/" source-path="/src/main/resources" tag="defaultRootSource"/>
         <wb-resource deploy-path="/" source-path="/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/target/generated-sources/annotations"/>
-        <wb-resource deploy-path="/" source-path="/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/src/test/resources"/>
-        <wb-resource deploy-path="/" source-path="/target/generated-test-sources/test-annotations"/>
         <property name="java-output-path" value="/wsOTCCMEjb/target/classes"/>
     </wb-module>
 </project-modules>

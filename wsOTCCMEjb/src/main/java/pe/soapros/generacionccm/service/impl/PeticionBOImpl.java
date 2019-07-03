@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import pe.soapros.generacionccm.beans.AlmacenamientoFilenet;
+import pe.soapros.generacionccm.beans.AlmacenamientoLocal;
 import pe.soapros.generacionccm.beans.AlmacenamientoS3;
 import pe.soapros.generacionccm.beans.Cabecera;
 import pe.soapros.generacionccm.beans.CabeceraIN;
@@ -28,13 +30,19 @@ import pe.soapros.generacionccm.beans.DetalleServicio;
 import pe.soapros.generacionccm.beans.DetalleTXT;
 import pe.soapros.generacionccm.beans.DetalleTrazabilidad;
 import pe.soapros.generacionccm.beans.Entrada_Peticion;
+import pe.soapros.generacionccm.beans.IndHTML_AlmcLocal;
 import pe.soapros.generacionccm.beans.IndHTML_AlmcS3;
+import pe.soapros.generacionccm.beans.IndPDF_AlmcLocal;
 import pe.soapros.generacionccm.beans.IndPDF_AlmcS3;
+import pe.soapros.generacionccm.beans.IndTXT_AlmcLocal;
 import pe.soapros.generacionccm.beans.IndTXT_AlmcS3;
 import pe.soapros.generacionccm.beans.PeticionOUT;
 import pe.soapros.generacionccm.beans.ResponseS3;
 import pe.soapros.generacionccm.beans.Respuesta;
 import pe.soapros.generacionccm.beans.Solicitud;
+import pe.soapros.generacionccm.beans.indHTML_AlmcFilenet3;
+import pe.soapros.generacionccm.beans.indPDF_AlmcFilenet;
+import pe.soapros.generacionccm.beans.indTXT_AlmcFilenet2;
 import pe.soapros.generacionccm.beans.DetalleHTML;
 import pe.soapros.generacionccm.persistance.domain.Detalle;
 import pe.soapros.generacionccm.persistance.domain.Peticion;
@@ -260,7 +268,7 @@ public class PeticionBOImpl implements PeticionBO {
 			if (hmap.get("S3") != null) {
 				
 				 
-				logger.debug("JSON S3: {}", hmap.get("Documentos Subidos S3"));
+				logger.debug("JSON S3: {}", hmap.get("S3"));
 				
 				
 
@@ -336,7 +344,116 @@ public class PeticionBOImpl implements PeticionBO {
 		} catch (Exception e) {
 			logger.error("ERROR S3 {}", e);
 		}
+		
+		/****************************************************
+		 * ENVIO FILENET
+		 ***************************************************/
+		AlmacenamientoFilenet almFilenet = new AlmacenamientoFilenet();
+		
+		indPDF_AlmcFilenet pdfFilenet = new indPDF_AlmcFilenet();
+		indTXT_AlmcFilenet2 txtFilenet = new indTXT_AlmcFilenet2();
+		indHTML_AlmcFilenet3 htmlFilenet = new indHTML_AlmcFilenet3();
+		
+		try {
+			
+			pdfFilenet.setInfFilenetPDF(sol.getCabecera().getDetalleFilenet().getIndPDF().getIndFilenetPDF());
+			logger.debug("pdfFilenet", sol.getCabecera().getDetalleFilenet().getIndPDF().getIndFilenetPDF());
+			
+			txtFilenet.setInfFilenetTXT(sol.getCabecera().getDetalleFilenet().getIndTXT().getIndFilenetTXT());
+			logger.debug("txtFilenet", sol.getCabecera().getDetalleFilenet().getIndTXT().getIndFilenetTXT());
+			
+			htmlFilenet.setInfFilenetHTML(sol.getCabecera().getDetalleFilenet().getIndHTML().getIndFilenetHTML());
+			logger.debug("htmlFilenet", sol.getCabecera().getDetalleFilenet().getIndHTML().getIndFilenetHTML());
+			
+			if (hmap.get("Filenet") != null) {
+				logger.debug("JSON Filenet: {}", hmap.get("Filenet"));
+				
+				if (cabIn.getDetalleFilenet().getIndPDF().getIndFilenetPDF().equals("S")) {
+					
+					if(hmap.get("Filenet").isIndError()) {
+						pdfFilenet.setIndExito("N");
+						pdfFilenet.setCodEstado("-1");
+						pdfFilenet.setMsgEstado(hmap.get("Filenet").getInputJson());
+					}else {
+												
+						pdfS3.setIndExito("S");
+						pdfS3.setCodEstado("0");
+						pdfS3.setMsgEstado("Documento Subido a Filenet");
+						pdfS3.setRutaURLDestinoPDF(hmap.get("Filenet").getInputJson());
+					}
+					
+				}
+				
+				
+				if (cabIn.getDetalleFilenet().getIndTXT().getIndFilenetTXT().equals("S")) { 
+					
+					if(hmap.get("Filenet").isIndError()) {
+						txtS3.setIndExito("N");
+						txtS3.setCodEstado("-1");
+						txtS3.setMsgEstado("Documento No Subido a Filenet");
+						txtS3.setRutaURLDestinoTXT(hmap.get("Filenet").getInputJson());
+					}else {				
+						txtS3.setIndExito("S");
+						txtS3.setCodEstado("0");
+						txtS3.setMsgEstado("Documento Subido a Filenet");
+						txtS3.setRutaURLDestinoTXT(hmap.get("Filenet").getInputJson());
+					}
+					
+				}
 
+				if (cabIn.getDetalleFilenet().getIndHTML().getIndFilenetHTML().equals("S")){
+					
+					if(hmap.get("Filenet").isIndError()) {
+						htmlS3.setIndExito("N");
+						htmlS3.setCodEstado("-1");
+						htmlS3.setMsgEstado("Documento No Subido a Filenet");
+						htmlS3.setRutaURLDestinoHTML(hmap.get("Filenet").getInputJson());
+					}else {
+						htmlS3.setIndExito("S");
+						htmlS3.setCodEstado("0");
+						htmlS3.setMsgEstado("Documento Subido a Filenet");
+						htmlS3.setRutaURLDestinoHTML(hmap.get("Filenet").getInputJson());
+					}
+					
+				}
+				
+				almFilenet.setIndPDF(pdfFilenet);
+				logger.debug("pdfFilenet: {}", pdfFilenet);
+
+				almFilenet.setIndTXT(txtFilenet);
+				logger.debug("txtFilenet: {}", txtFilenet);
+
+				almFilenet.setIndHTML(htmlFilenet);
+				logger.debug("htmlFilenet: {}", htmlFilenet);
+
+				cabecera.setAlmacenamientoFilenet(almFilenet);
+				logger.debug("ALMACENAMIENTO Filenet {}", almFilenet);
+				
+			}
+			
+		}catch (Exception e) {
+			logger.error("ERROR FileNet {}", e);
+		}
+		
+		/*********************************************
+		 * ENVIO RUTA COMPARTIDA
+		 *********************************************/
+
+		AlmacenamientoLocal almLocal = new AlmacenamientoLocal();
+		
+		IndPDF_AlmcLocal pdfLocal = new IndPDF_AlmcLocal();
+		IndTXT_AlmcLocal txtLocal = new IndTXT_AlmcLocal();
+		IndHTML_AlmcLocal htmlLocal = new IndHTML_AlmcLocal();
+		
+		try {
+			
+			pdfLocal.setIndLocalPDF(sol.getCabecera().getDetalleFilenet().getIndPDF().getIndFilenetPDF());
+			
+		}catch(Exception e) {
+			logger.error("ERROR AlmacenamientoLocal {}", e);
+		}
+		
+		
 		/**********************************************
 		 * ENVIO A TRAZABILIDAD
 		 *********************************************/

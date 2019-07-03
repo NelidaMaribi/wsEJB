@@ -7,9 +7,9 @@ public class AlmacenamientoFilenet implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	indPDF_AlmcFilenet indPDF;
-	indTXT_AlmcFilenet2 indTXT;
-	indHTML_AlmcFilenet3 indHTML;
+	private indPDF_AlmcFilenet indPDF;
+	private indTXT_AlmcFilenet2 indTXT;
+	private indHTML_AlmcFilenet3 indHTML;
 	
 	public indPDF_AlmcFilenet getIndPDF() {
 		return indPDF;

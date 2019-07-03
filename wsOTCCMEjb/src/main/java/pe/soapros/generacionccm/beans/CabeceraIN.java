@@ -36,6 +36,9 @@ public class CabeceraIN implements Serializable {
 	private DetalleS3IN detalleS3;
 
 	private DetalleFilenetIN detalleFilenet;
+	
+	private DetalleLocalIN detalleLocal;
+	
 
 	public DetallePDFIN getDetallePDF() {
 		return detallePDF;
@@ -109,13 +112,23 @@ public class CabeceraIN implements Serializable {
 		this.detalleTrazabilidadCorreo = detalleTrazabilidadCorreo;
 	}
 
+	
+	public DetalleLocalIN getDetalleLocal() {
+		return detalleLocal;
+	}
+
+	public void setDetalleLocal(DetalleLocalIN detalleLocal) {
+		this.detalleLocal = detalleLocal;
+	}
+
 	@Override
 	public String toString() {
 		return "CabeceraIN [detallePDF=" + detallePDF + ", detalleTXT=" + detalleTXT + ", detalleHTML=" + detalleHTML
 				+ ", detalleCorreo=" + detalleCorreo + ", detalleSMS=" + detalleSMS + ", detalleTrazabilidadCorreo="
 				+ detalleTrazabilidadCorreo + ", detalleServicioGenerico=" + detalleServicioGenerico + ", detalleS3="
-				+ detalleS3 + ", detalleFilenet=" + detalleFilenet + "]";
+				+ detalleS3 + ", detalleFilenet=" + detalleFilenet + ", detalleLocal=" + detalleLocal + "]";
 	}
+
 	
 	
 
