@@ -200,13 +200,13 @@ public class RegistrarRespuestaController {
 			IndPDFINDetalleS3 indPdfS3 = new IndPDFINDetalleS3();
 			IndTXTINDetalleS3 indTxtS3 = new IndTXTINDetalleS3();
 			IndHTMLINDetalleS3 indHtmlS3 = new IndHTMLINDetalleS3();
-			
+
 			IndPDFLocalIN indPdfLocalCom = new IndPDFLocalIN();
 			IndTXTLocalIN indTxtLocalCom = new IndTXTLocalIN();
 			IndHTMLLocalIN indHtmlLocalCom = new IndHTMLLocalIN();
-			
+
 			DetalleLocalIN detalLocal = new DetalleLocalIN();
-			
+
 			DetalleFilenetIN detFileNet = new DetalleFilenetIN();
 			IndPDFFilenetIN fileNetPdf = new IndPDFFilenetIN();
 			IndTXTFilenetIN fileNetTxt = new IndTXTFilenetIN();
@@ -1545,6 +1545,24 @@ public class RegistrarRespuestaController {
 			 * *****************************************************************************
 			 */
 			logger.debug("iniciando DETALLE SMS");
+
+			if (cabecera.has("detalleSMS")) {
+				detalleSms = cabecera.get("detalleSMS");
+				logger.debug("detalleSMS", cabecera.get("detalleSMS"));
+
+			} else {
+
+				throw new JsonProcessingException("cabecera.detalleSMS, La etiqueta no existe ") {
+
+					private static final long serialVersionUID = 1L;
+
+					@SuppressWarnings("unused")
+					private void init() {
+						this.initCause(this);
+					}
+				};
+			}
+
 			if (cabecera.has("detalleSMS")) {
 
 				detalleSms = cabecera.get("detalleSMS");
@@ -1683,6 +1701,7 @@ public class RegistrarRespuestaController {
 					}
 				};
 			}
+			cab.setDetalleSMS(detSms);
 
 			/**
 			 * ******************************************************************************
@@ -1895,141 +1914,141 @@ public class RegistrarRespuestaController {
 					}
 				};
 			}
-			
+
 			/****************************************************************************
 			 * DETALLE LOCAL
 			 **************************************************************************/
-			if(cabecera.has("detalleLocal")) {
+			if (cabecera.has("detalleLocal")) {
 				detLocal = cabecera.get("detalleLocal");
 				logger.debug("DETALLE Local" + cabecera.get("detalleLocal"));
-			}else {
-				throw new JsonProcessingException("cabecera.detalleLocal, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+			} else {
+				/*
+				 * throw new
+				 * JsonProcessingException("cabecera.detalleLocal, La etiqueta no existe ") {
+				 * 
+				 * private static final long serialVersionUID = 1L;
+				 * 
+				 * @SuppressWarnings("unused") private void init() { this.initCause(this); } };
+				 */
+				detLocal = cabecera.with("detalleLocal");// at("detalleLocal");
 			}
-			
-			
+
 			// VALIDAR LA ETIQUETAS indPDF de DETALLE Local
 			if (detLocal.has("indPDF")) {
 				indPdfLocal = detLocal.get("indPDF");
 				logger.debug("DETALLELOCAL.indPDF " + detLocal.get("indPDF"));
 			} else {
 
-				throw new JsonProcessingException("cabecera.detalleLocal.indPDF, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+//				throw new JsonProcessingException("cabecera.detalleLocal.indPDF, La etiqueta no existe ") {
+//									private static final long serialVersionUID = 1L;
+//
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
+				indPdfLocal = detLocal.with("indPDF"); // at("indPDF");
 			}
-			
+
 			if (detLocal.has("indTXT")) {
 				indTxtLocal = detLocal.get("indTXT");
 				logger.debug("DETALLELOCAL.indTXT " + detLocal.get("indTXT"));
 			} else {
-
-				throw new JsonProcessingException("cabecera.detalleLocal.indTXT, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+				indTxtLocal = detLocal.with("indTXT");// at("indTXT");
+//				throw new JsonProcessingException("cabecera.detalleLocal.indTXT, La etiqueta no existe ") {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
+//
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
 			}
-			
+
 			if (detLocal.has("indHTML")) {
 				indHtmlLocal = detLocal.get("indHTML");
 				logger.debug("DETALLELOCAL.indHTML " + detLocal.get("indHTML"));
 			} else {
 
-				throw new JsonProcessingException("cabecera.detalleLocal.indHTML, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
+				indHtmlLocal = detLocal.with("indHTML");// at("indHTML");
+//				throw new JsonProcessingException("cabecera.detalleLocal.indHTML, La etiqueta no existe ") {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
 
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
 			}
-			
 
 			if (indPdfLocal.has("indLocalPDF")) {
 				indPdfLocalCom.setIndLocalPDF(indPdfLocal.get("indLocalPDF").asText());
 				indPdfLocalCom.setRutaDestinoPDF(indPdfLocal.get("rutaDestinoPDF").asText());
-				logger.debug("DETALLELocal.indPDF.indLocalPDF "+  indPdfLocal.get("indLocalPDF"));
+				logger.debug("DETALLELocal.indPDF.indLocalPDF " + indPdfLocal.get("indLocalPDF"));
 			} else {
+				indPdfLocalCom.setIndLocalPDF("N");
+				indPdfLocalCom.setRutaDestinoPDF(null);
+//				throw new JsonProcessingException("cabecera.detalleLocal.indPDF.indLocalPDF, La etiqueta no existe ") {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
+//
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
 
-				throw new JsonProcessingException("cabecera.detalleLocal.indPDF.indLocalPDF, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
 			}
-			
+
 			if (indTxtLocal.has("indLocalTXT")) {
 				indTxtLocalCom.setIndLocalTXT(indTxtLocal.get("indLocalTXT").asText());
 				indTxtLocalCom.setRutaDestinoTXT(indTxtLocal.get("rutaDestinoTXT").asText());
 				logger.debug("DETALLELocal.indTXT.indLocalTXT " + indTxtLocal.get("indLocalTXT"));
 			} else {
-
-				throw new JsonProcessingException("cabecera.detalleLocal.indTXT.indLocalTXT, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+				indTxtLocalCom.setIndLocalTXT("N");
+				indTxtLocalCom.setRutaDestinoTXT(null);
+//				throw new JsonProcessingException("cabecera.detalleLocal.indTXT.indLocalTXT, La etiqueta no existe ") {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
+//
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
 			}
-			
+
 			if (indHtmlLocal.has("indLocalHTML")) {
 				indHtmlLocalCom.setIndLocalHTML(indHtmlLocal.get("indLocalHTML").asText());
 				indHtmlLocalCom.setRutaDestinoHTML(indHtmlLocal.get("rutaDestinoHTML").asText());
 				logger.debug("DETALLELocal.indHTML.indLocalHTML " + indHtmlLocal.get("indLocalHTML"));
 			} else {
-
-				throw new JsonProcessingException("cabecera.detalleLocal.indHTML.indLocalHTML, La etiqueta no existe ") {
-					/**
-					 *
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@SuppressWarnings("unused")
-					private void init() {
-						this.initCause(this);
-					}
-				};
+				indHtmlLocalCom.setIndLocalHTML("N");
+				indHtmlLocalCom.setRutaDestinoHTML(null);
+//				throw new JsonProcessingException(
+//						"cabecera.detalleLocal.indHTML.indLocalHTML, La etiqueta no existe ") {
+//					/**
+//					 *
+//					 */
+//					private static final long serialVersionUID = 1L;
+//
+//					@SuppressWarnings("unused")
+//					private void init() {
+//						this.initCause(this);
+//					}
+//				};
 			}
-			
+
 			if (detPdf.getIndPDF().equals("N") && indPdfLocalCom.getIndLocalPDF().equals("S")) {
 
 				throw new JsonProcessingException(
@@ -2043,7 +2062,7 @@ public class RegistrarRespuestaController {
 					}
 				};
 			}
-			
+
 			if (detTxt.getIndTXT().equals("N") && indTxtLocalCom.getIndLocalTXT().equals("S")) {
 
 				throw new JsonProcessingException(
@@ -2057,7 +2076,7 @@ public class RegistrarRespuestaController {
 					}
 				};
 			}
-			
+
 			if (detHtml.getIndHTML().equals("N") && indHtmlLocalCom.getIndLocalHTML().equals("S")) {
 
 				throw new JsonProcessingException(
@@ -2071,12 +2090,11 @@ public class RegistrarRespuestaController {
 					}
 				};
 			}
-			
+
 			detalLocal.setIndPDF(indPdfLocalCom);
 			detalLocal.setIndTXT(indTxtLocalCom);
 			detalLocal.setIndHTML(indHtmlLocalCom);
-			
-			
+
 			cab.setDetalleLocal(detalLocal);
 
 			/**
