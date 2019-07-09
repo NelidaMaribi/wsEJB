@@ -25,6 +25,7 @@ import pe.soapros.generacionccm.beans.AlmacenamientoLocal;
 import pe.soapros.generacionccm.beans.AlmacenamientoS3;
 import pe.soapros.generacionccm.beans.Cabecera;
 import pe.soapros.generacionccm.beans.CabeceraIN;
+import pe.soapros.generacionccm.beans.DetalleCorreoIN;
 import pe.soapros.generacionccm.beans.DetallePDF;
 import pe.soapros.generacionccm.beans.DetalleRespuesta;
 import pe.soapros.generacionccm.beans.DetalleSMS;
@@ -554,6 +555,45 @@ public class PeticionBOImpl implements PeticionBO {
 		} catch (Exception e) {
 
 			logger.error("ERROR SMS {}", e);
+		}
+		/***************************************************************
+		 * DETALLE DEL SERVICIO correo
+		 *************************************************************/
+
+		DetalleCorreoIN detCorreo = new DetalleCorreoIN();
+
+		try {
+			detCorreo.setIndCorreo((sol.getCabecera().getDetalleCorreo().getIndCorreo()));
+			logger.debug("IND CORREO: {}", sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
+
+			if (hmap.get("ServicioGenerico") != null) {
+
+				logger.debug("SERVICIO GENERICO");
+				if (cabIn.getDetalleServicioGenerico().getIndServicioGenerico().equals("S")) {
+
+					if (hmap.get("ServicioGenerico").isIndError()) {
+						detServ.setIndExito("N");
+						detServ.setCodEstado("-1");
+						detServ.setMsgEstado("Servicio Genérico no realizado");
+						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+					} else {
+						detServ.setIndExito("S");
+						detServ.setCodEstado("0");
+						detServ.setMsgEstado("Servicio Genérico realizado");
+						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+					}
+
+				}
+
+			}
+
+			cabecera.setDetalleServicio(detServ);
+			logger.debug("DETSERV: {}", detServ);
+
+		} catch (Exception e) {
+
+			logger.error("ERROR SERVICIO GENERICO {}", e);
+
 		}
 
 		respuesta.setCabecera(cabecera);

@@ -509,11 +509,11 @@ public class RegistrarRespuestaController {
 				if (detallePdf.has("codigoPlantilla")) {
 
 					detPdf.setCodigoPlantilla(detallePdf.get("codigoPlantilla").asText());
-					logger.debug(detallePdf.get("codigoPlantilla").asText());
+					logger.debug("CodigoPlantilla", detallePdf.get("codigoPlantilla").asText());
 
 				} else {
 
-					throw new JsonProcessingException("cabecera.detallePDF.codigoPlantilla, La etiqueta no existe ") {
+					throw new JsonProcessingException("cabecera.detallePdf.codigoPlantilla, La etiqueta no existe ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -524,11 +524,11 @@ public class RegistrarRespuestaController {
 					};
 				}
 
-				// VALIDAR QUE LOS CAMPOS ENTEN LLENOS
 				if (detPdf.getCodigoPlantilla().equals("") || detPdf.getCodigoPlantilla().equals("null")
 						|| detPdf.getCodigoPlantilla().equals(" ")) {
+					// validar que no este vacio el indPDF
 
-					throw new JsonProcessingException("cabecera.detallePDF.codigoPlantilla No puede ser nulo ") {
+					throw new JsonProcessingException("cabecera.detallePdf.codigoPlantilla No puede ser nulo ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -537,16 +537,17 @@ public class RegistrarRespuestaController {
 							this.initCause(this);
 						}
 					};
-
 				} else {
 
 					if (detPdf.getIndPDF().equals("S")) {
+						logger.debug("IndPDF Devolver"+detPdf.getIndPDF());
+
 						Boolean validado = validatorBO.validatePlantilla(o.getSistema(), detPdf.getCodigoPlantilla());
 
 						if (validado == null) {
 
 							throw new JsonProcessingException(
-									"cabecera.detallePDF.codigoPlantilla, No se encontró la plantilla") {
+									"cabecera.detallePdf.codigoPlantilla. No se encontró la plantilla null"+detPdf.getIndPDF()+ validado) {
 
 								private static final long serialVersionUID = 1L;
 
@@ -556,10 +557,11 @@ public class RegistrarRespuestaController {
 								}
 							};
 						}
+
 						if (!validado) {
 
 							throw new JsonProcessingException(
-									"cabecera.detallePDF.codigoPlantilla Esta plantilla no está registrada para: "
+									"cabecera.detallePdf.codigoPlantilla Esta plantilla no está registrada para diferente null: "
 											+ o.getSistema()) {
 
 								private static final long serialVersionUID = 1L;
@@ -569,58 +571,22 @@ public class RegistrarRespuestaController {
 									this.initCause(this);
 								}
 							};
+						} else {
+							detPdf.setCodigoPlantilla(detallePdf.get("codigoPlantilla").asText());
 						}
 
-						detPdf.setCodigoPlantilla(detallePdf.get("codigoPlantilla").asText());
 					}
 				}
 
-				// 2: INDVISUALIZACION
-				if (detallePdf.has("indVisualizacion")) {
-
-					detPdf.setIndVisualizacion(detallePdf.get("indVisualizacion").asText());
-					logger.debug(detallePdf.get("indVisualizacion").asText());
-
-				} else {
-
-					throw new JsonProcessingException("cabecera.detallePDF.indVisualizacion, La etiqueta no existe ") {
-
-						private static final long serialVersionUID = 1L;
-
-						@SuppressWarnings("unused")
-						private void init() {
-							this.initCause(this);
-						}
-					};
-				}
-
-				// validar visualización
-				if (detPdf.getIndVisualizacion().equals("") || detPdf.getIndVisualizacion().equals("null")
-						|| detPdf.getIndVisualizacion().equals(" ")) {
-
-					throw new JsonProcessingException("cabecera.detallePDF.indVisualizacion No puede ser nulo ") {
-
-						private static final long serialVersionUID = 1L;
-
-						@SuppressWarnings("unused")
-						private void init() {
-							this.initCause(this);
-						}
-					};
-				} else {
-					detPdf.setIndVisualizacion(detallePdf.get("indVisualizacion").asText());
-
-				}
-
-				// 3: NOMBREDOCUMENTO
+				// 2: NOMBREDOCUMENTO
 				if (detallePdf.has("nombreDocumento")) {
 
 					detPdf.setNombreDocumento(detallePdf.get("nombreDocumento").asText());
-					logger.debug(detallePdf.get("nombreDocumento").asText());
+					logger.debug("NOMBREDOCUMENTO", detallePdf.get("nombreDocumento").asText());
 
 				} else {
 
-					throw new JsonProcessingException("cabecera.detallePDF.nombreDocumento, La etiqueta no existe ") {
+					throw new JsonProcessingException("cabecera.detallePdf.nombreDocumento, La etiqueta no existe ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -631,11 +597,10 @@ public class RegistrarRespuestaController {
 					};
 				}
 
-				// validado los nombreDocumento
 				if (detPdf.getNombreDocumento().equals("") || detPdf.getNombreDocumento().equals("null")
 						|| detPdf.getNombreDocumento().equals(" ")) {
 
-					throw new JsonProcessingException("cabecera.detallePDF.nombreDocumento No puede ser nulo ") {
+					throw new JsonProcessingException("cabecera.detallePdf.nombreDocumento No puede ser nulo ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -644,19 +609,20 @@ public class RegistrarRespuestaController {
 							this.initCause(this);
 						}
 					};
+
 				} else {
-					detPdf.setNombreDocumento(detallePdf.get("nombreDocumento").asText());
+					detTxt.setNombreDocumento(detallePdf.get("nombreDocumento").asText());
 				}
 
-				// 4: INDGUARDADO
+				// 3: INDGUARDADO
 				if (detallePdf.has("indGuardado")) {
 
 					detPdf.setIndGuardado(detallePdf.get("indGuardado").asText());
-					logger.debug(detallePdf.get("indGuardado").asText());
+					logger.debug("INDGUARDADO", detallePdf.get("indGuardado").asText());
 
 				} else {
 
-					throw new JsonProcessingException("cabecera.detallePDF.indGuardado, La etiqueta no existe ") {
+					throw new JsonProcessingException("cabecera.detallePdf.indGuardado, La etiqueta no existe ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -667,11 +633,10 @@ public class RegistrarRespuestaController {
 					};
 				}
 
-				// validar indGuardado
 				if (detPdf.getIndGuardado().equals("") || detPdf.getIndGuardado().equals("null")
 						|| detPdf.getIndGuardado().equals(" ")) {
 
-					throw new JsonProcessingException("cabecera.detallePDF.indGuardado No puede ser nulo ") {
+					throw new JsonProcessingException("cabecera.detallePdf.indGuardado No puede ser nulo ") {
 
 						private static final long serialVersionUID = 1L;
 
@@ -686,17 +651,16 @@ public class RegistrarRespuestaController {
 
 				cab.setDetallePDF(detPdf);
 
-			} else if (detPdf.getIndPDF().equals("N")) {
+			}  else if (detPdf.getIndPDF().equals("N")) {
 
 				detPdf.setIndPDF(detallePdf.get("indPDF").asText());
-				logger.debug(detallePdf.get("indPDF").asText());
+				logger.debug("indPDF", detallePdf.get("indPDF").asText());
 
 				cab.setDetallePDF(detPdf);
 
 			} else {
 
-				throw new JsonProcessingException(
-						"cabecera.detallePDF.indPDF, No puede tener otro valor que no sea S/N") {
+				throw new JsonProcessingException("cabecera.detallePDF.indPDF, No puede ser nulo ") {
 
 					private static final long serialVersionUID = 1L;
 
@@ -1000,7 +964,7 @@ public class RegistrarRespuestaController {
 
 				} else {
 
-					if (detHtml.getCodigoPlantilla().equals("S")) {
+					if (detHtml.getIndHTML().equals("S")) {
 						Boolean validado = validatorBO.validatePlantilla(o.getSistema(), detHtml.getCodigoPlantilla());
 
 						if (validado == null) {

@@ -55,7 +55,7 @@ public class ValidatorBOImpl implements ValidatorBO{
 			}
 		} catch (Exception e) {
 			throw new Exception(
-	                "[validateSistema] No se encontró el la plantilla: Sistema {" + sistema + "} Codigo {" + codigo + "}");
+	                "[validateSistema] No se encontró el la plantilla: ValidatePlantilla Sistema {" + sistema + "} Codigo {" + codigo + "}");
 		}
 		return rpta;
 	}
@@ -71,7 +71,7 @@ public class ValidatorBOImpl implements ValidatorBO{
 			
 		} catch (Exception e) {
 			throw new Exception(
-	                "[validateSistema] No se encontró el la plantilla: Sistema {" + sistema + "} Codigo {" + codigo + "}");
+	                "[validateSistema] No se encontró el la plantilla: GetPlantilla Sistema  {" + sistema + "} Codigo {" + codigo + "}");
 		}
 		return doc;
 		
