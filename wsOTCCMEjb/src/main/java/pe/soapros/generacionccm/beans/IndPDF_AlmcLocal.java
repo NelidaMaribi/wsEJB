@@ -1,12 +1,14 @@
 package pe.soapros.generacionccm.beans;
 
-public class IndPDF_AlmcLocal {
+import java.io.Serializable;
 
-	private String indLocalPDF;
-	private String indExito;
-	private String codEstado;
-	private String msgEstado;
-	private String rutaDestinoPDF;
+public class IndPDF_AlmcLocal implements Serializable {
+	private static final long serialVersionUID = 1L;
+	 String indLocalPDF;
+	 String indExito;
+	 String codEstado;
+	 String msgEstado;
+	 String rutaDestinoPDF;
 	public String getIndLocalPDF() {
 		return indLocalPDF;
 	}
@@ -37,11 +39,8 @@ public class IndPDF_AlmcLocal {
 	public void setRutaDestinoPDF(String rutaDestinoPDF) {
 		this.rutaDestinoPDF = rutaDestinoPDF;
 	}
-	@Override
-	public String toString() {
-		return "IndPDF_AlmcLocal [indLocalPDF=" + indLocalPDF + ", indExito=" + indExito + ", codEstado=" + codEstado
-				+ ", msgEstado=" + msgEstado + ", rutaDestinoPDF=" + rutaDestinoPDF + "]";
-	}
+	
+
 	
 	
 }

@@ -4,15 +4,12 @@ import java.io.Serializable;
 
 public class IndHTML_AlmcLocal implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private String indLocalHTML;
-	private String indEstado;
-	private String codEstado;
-	private String msgEstado;
-	private String rutaDestinoHTML;
+	 String indLocalHTML;
+	 String indEstado;
+	 String codEstado;
+	 String msgEstado;
+	 String rutaDestinoHTML;
 	public String getIndLocalHTML() {
 		return indLocalHTML;
 	}
@@ -43,11 +40,7 @@ public class IndHTML_AlmcLocal implements Serializable{
 	public void setRutaDestinoHTML(String rutaDestinoHTML) {
 		this.rutaDestinoHTML = rutaDestinoHTML;
 	}
-	@Override
-	public String toString() {
-		return "IndHTML_AlmcLocal [indLocalHTML=" + indLocalHTML + ", indEstado=" + indEstado + ", codEstado="
-				+ codEstado + ", msgEstado=" + msgEstado + ", rutaDestinoHTML=" + rutaDestinoHTML + "]";
-	}
+	
 	
 	
 }

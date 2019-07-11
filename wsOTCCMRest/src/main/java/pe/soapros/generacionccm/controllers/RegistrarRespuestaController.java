@@ -267,7 +267,9 @@ public class RegistrarRespuestaController {
 					}
 				};
 
-			} else {
+			} else
+
+			{
 				logger.debug("Validar DB");
 				Boolean validado = validatorBO.validateSistema(o.getSistema());
 				if (validado == null) {
@@ -540,14 +542,15 @@ public class RegistrarRespuestaController {
 				} else {
 
 					if (detPdf.getIndPDF().equals("S")) {
-						logger.debug("IndPDF Devolver"+detPdf.getIndPDF());
+						logger.debug("IndPDF Devolver" + detPdf.getIndPDF());
 
 						Boolean validado = validatorBO.validatePlantilla(o.getSistema(), detPdf.getCodigoPlantilla());
 
 						if (validado == null) {
 
 							throw new JsonProcessingException(
-									"cabecera.detallePdf.codigoPlantilla. No se encontró la plantilla null"+detPdf.getIndPDF()+ validado) {
+									"cabecera.detallePdf.codigoPlantilla. No se encontró la plantilla null"
+											+ detPdf.getIndPDF() + validado) {
 
 								private static final long serialVersionUID = 1L;
 
@@ -651,7 +654,7 @@ public class RegistrarRespuestaController {
 
 				cab.setDetallePDF(detPdf);
 
-			}  else if (detPdf.getIndPDF().equals("N")) {
+			} else if (detPdf.getIndPDF().equals("N")) {
 
 				detPdf.setIndPDF(detallePdf.get("indPDF").asText());
 				logger.debug("indPDF", detallePdf.get("indPDF").asText());
@@ -2547,6 +2550,7 @@ public class RegistrarRespuestaController {
 			// VALIDAR LAS ETIQUETAS DE INDPDF DE DETALLEFINET
 			if (indPDFFilenet.has("indFilenetPDF")) {
 				fileNetPdf.setIndFilenetPDF(indPDFFilenet.get("indFilenetPDF").asText());
+
 				logger.debug("IND FILENET PDF{}", indPDFFilenet.get("indFilenetPDF").asText());
 			} else {
 
@@ -2566,9 +2570,15 @@ public class RegistrarRespuestaController {
 			// VALIDAMOS QUE INDFILENETPDF SEA = S
 			if (fileNetPdf.getIndFilenetPDF() != null && fileNetPdf.getIndFilenetPDF().equals("S")) {
 				// VALIDAR QUE LAS ETIQUETAS EXITAN
+
 				if (indPDFFilenet.has("propiedades")) {
+
 					PropiedadesFilenetPdf = indPDFFilenet.get("propiedades");
-					logger.debug("PROPIEDADES{}", indPDFFilenet.get("propiedades"));
+
+					fileNetTxt.setPropiedades(PropiedadesFilenetTxt);
+
+					logger.debug("PROPIEDADESOBTENIDASFILENETTXT{}", indPDFFilenet.get("propiedades"));
+
 				} else {
 
 					throw new JsonProcessingException("detalleFilenet.indPDF.propiedades, La etiqueta no existe ") {
@@ -2695,8 +2705,13 @@ public class RegistrarRespuestaController {
 			if (fileNetTxt.getIndFilenetTXT() != null && fileNetTxt.getIndFilenetTXT().equals("S")) {
 				// VALIDAR QUE EXISTA LAS ETIQUETAS
 				if (indTXTFilenet.has("propiedades")) {
+
 					PropiedadesFilenetTxt = indTXTFilenet.get("propiedades");
-					logger.debug("PROPIEDADES{}", indTXTFilenet.get("propiedades"));
+
+					 fileNetTxt.setPropiedades(PropiedadesFilenetTxt);
+
+					logger.debug("PROPIEDADESOBTENIDASFILENETTXT{}", indTXTFilenet.get("propiedades"));
+
 				} else {
 
 					throw new JsonProcessingException("detalleFilenet.indTXT.propiedades, La etiqueta no existe ") {
@@ -2804,7 +2819,9 @@ public class RegistrarRespuestaController {
 			if (indHTMLFilenet.has("indFilenetHTML")) {
 				fileNetHtml.setIndFilenetHTML(indHTMLFilenet.get("indFilenetHTML").asText());
 				logger.debug("IND FILENET HTML{}", indHTMLFilenet.get("indFilenetHTML").asText());
-			} else {
+			}
+
+			else {
 
 				throw new JsonProcessingException("detalleFilenet.indHTML.indFilenetHTML, La etiqueta no existe ") {
 					/**
@@ -2821,8 +2838,14 @@ public class RegistrarRespuestaController {
 			// VALIDAMOS QUE INDHTML SEA =S
 			if (fileNetHtml.getIndFilenetHTML() != null && fileNetHtml.getIndFilenetHTML().equals("S")) {
 				// VALIDAR QUE LAS ETIQUETAS EXISTAN
+
 				if (indHTMLFilenet.has("propiedades")) {
+
 					PropiedadesFilenetHtml = indHTMLFilenet.get("propiedades");
+
+					fileNetHtml.setPropiedades(PropiedadesFilenetHtml);
+
+					logger.debug("PROPIEDADESOBTENIDASFILENETTXT{}", indHTMLFilenet.get("propiedades"));
 				} else {
 
 					throw new JsonProcessingException("detalleFilenet.indHTML.propiedades, La etiqueta no existe ") {

@@ -3,21 +3,25 @@ package pe.soapros.generacionccm.beans;
 import java.io.Serializable;
 
 public class DetalleSMS implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String indSMS ;
-	private DetalleRespuesta[] numeroRespuesta ;
+	private String indSMS;
+	private DetalleRespuesta numeroRespuesta;
 
-
-	public DetalleRespuesta[] getNumeroRespuesta() {
+	
+	public DetalleRespuesta getNumeroRespuesta() {
 		return numeroRespuesta;
 	}
 
-	public void setNumeroRespuesta(DetalleRespuesta[] numeroRespuesta) {
+	public void setNumeroRespuesta(DetalleRespuesta numeroRespuesta) {
 		this.numeroRespuesta = numeroRespuesta;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getIndSMS() {

@@ -10,6 +10,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.xml.bind.ParseConversionEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,17 +20,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import pe.soapros.generacionccm.beans.AlmacenamientoFilenet;
 import pe.soapros.generacionccm.beans.AlmacenamientoLocal;
 import pe.soapros.generacionccm.beans.AlmacenamientoS3;
 import pe.soapros.generacionccm.beans.Cabecera;
 import pe.soapros.generacionccm.beans.CabeceraIN;
+import pe.soapros.generacionccm.beans.DetalleCorreo;
 import pe.soapros.generacionccm.beans.DetalleCorreoIN;
 import pe.soapros.generacionccm.beans.DetallePDF;
 import pe.soapros.generacionccm.beans.DetalleRespuesta;
 import pe.soapros.generacionccm.beans.DetalleSMS;
 import pe.soapros.generacionccm.beans.DetalleServicio;
+import pe.soapros.generacionccm.beans.DetalleServicioGenericoIN;
 import pe.soapros.generacionccm.beans.DetalleTXT;
 import pe.soapros.generacionccm.beans.DetalleTrazabilidad;
 import pe.soapros.generacionccm.beans.Entrada_Peticion;
@@ -47,6 +51,7 @@ import pe.soapros.generacionccm.beans.indHTML_AlmcFilenet3;
 import pe.soapros.generacionccm.beans.indPDF_AlmcFilenet;
 import pe.soapros.generacionccm.beans.indTXT_AlmcFilenet2;
 import pe.soapros.generacionccm.beans.DetalleHTML;
+import pe.soapros.generacionccm.beans.DetalleHTMLIN;
 import pe.soapros.generacionccm.persistance.domain.Detalle;
 import pe.soapros.generacionccm.persistance.domain.Peticion;
 import pe.soapros.generacionccm.persistance.repository.DetalleRepository;
@@ -136,7 +141,7 @@ public class PeticionBOImpl implements PeticionBO {
 			return null;
 		}
 
-		logger.debug("Detalles: {}", detalles.toString());
+		logger.debug("DetallesOBTENIDOSJSON: {}", detalles.toString());
 
 		HashMap<String, Detalle> hmap = new HashMap<String, Detalle>();
 
@@ -146,7 +151,7 @@ public class PeticionBOImpl implements PeticionBO {
 
 		}
 
-		logger.debug("Input Solicitado: {}", hmap.get("Solicitado"));
+		logger.debug("InputSOLICITADOHMAP: {}", hmap);
 
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
@@ -238,6 +243,124 @@ public class PeticionBOImpl implements PeticionBO {
 
 		cabecera.setDetalleHTML(detHTML);
 		logger.debug("DETHTML: {}", detHTML);
+
+		/***********************************
+		 * + DETALLE DEL ENVIO A SMS
+		 ***********************************/
+		DetalleSMS detSMS = new DetalleSMS();
+		DetalleRespuesta detresp = new DetalleRespuesta();
+
+		try {
+
+			detSMS.setIndSMS(sol.getCabecera().getDetalleSMS().getIndSMS());
+			logger.debug("IND SMS: {}", sol.getCabecera().getDetalleSMS().getIndSMS());
+
+			if (hmap.get("Solicitado") != null) {
+
+				logger.debug("ENVIO SMS");
+
+				if (cabIn.getDetalleSMS().getIndSMS().equals("S")) {
+
+					if (hmap.get("Solicitado").isIndError()) {
+
+						detresp.setIndExito("N");
+						detresp.setCodEstado("-1");
+						detresp.setMsgEstado("DOCUMENTOS NO GENERADOS");
+
+					} else {
+
+						detresp.setIndExito("S");
+						detresp.setCodEstado("0");
+						detresp.setMsgEstado("DOCUMENTOS GENERADOS");
+					}
+
+				}
+
+			}
+
+			detSMS.setNumeroRespuesta(detresp);
+			cabecera.setEnvioSMS(detSMS);
+			logger.debug("ENVIO SMS: {}", detSMS);
+
+		} catch (Exception e) {
+
+			logger.error("ERROR SMS {}", e);
+		}
+
+		/**********************************************
+		 * ENVIO A TRAZABILIDAD
+		 *********************************************/
+
+		DetalleTrazabilidad detTraz = new DetalleTrazabilidad();
+
+		try {
+			detTraz.setIndTrazabilidad(sol.getCabecera().getDetalleTrazabilidadCorreo().getIndTrazabilidad());
+			logger.debug("INDTRAZABILIDAD: {}", sol.getCabecera().getDetalleTrazabilidadCorreo().getIndTrazabilidad());
+
+			if (hmap.get("Trazabilidad") != null) {
+
+				logger.debug("TRAZABILIDAD");
+
+				if (cabIn.getDetalleTrazabilidadCorreo().getIndTrazabilidad().equals("S")) {
+
+					if (hmap.get("Trazabilidad").isIndError()) {
+
+						detTraz.setIndExito("N");
+						detTraz.setCodEstado("-1");
+						detTraz.setMsgEstado("Trazabilidad no realizada");
+						detTraz.setValorretorno(hmap.get("Trazabilidad").getInputJson());
+
+					} else {
+
+						detTraz.setIndExito("S");
+						detTraz.setCodEstado("0");
+						detTraz.setMsgEstado("Trazabilidad realizada");
+						detTraz.setValorretorno(hmap.get("Trazabilidad").getInputJson());
+					}
+
+				}
+
+			}
+
+			cabecera.setDetalleTrazabilidad(detTraz);
+
+		} catch (Exception e) {
+
+			logger.error("ERROR TRAZABILIDAD {}", e);
+
+		}
+
+		/***********************************
+		 * + DETALLE SERVICIO GENERICO
+		 ***********************************/
+		DetalleServicio dets_g = new DetalleServicio();
+
+		try {
+
+			dets_g.setIndServicio(sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
+			logger.debug("IND SERVICIO: {}", sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
+			if (cabIn.getDetalleSMS().getIndSMS().equals("S")) {
+
+				if (hmap.get("ServicioGenerico").isIndError()) {
+					dets_g.setIndExito("N");
+					dets_g.setCodEstado("-1");
+					dets_g.setMsgEstado("DOCUMENTOS NO GENERADOS");
+
+				} else {
+					dets_g.setIndExito("S");
+					dets_g.setCodEstado("0");
+					dets_g.setMsgEstado("DOCUMENTOS GENERADOS");
+
+				}
+
+			}
+			cabecera.setDetalleServicio(dets_g);
+			logger.debug("SERVICIO Generico: {}", dets_g);
+
+		} catch (Exception e) {
+
+			logger.error("ERROR SERV. GENERICO {}", e);
+		}
 
 		/**************************************************
 		 * ALMACENAMIENTO EN S3
@@ -367,10 +490,9 @@ public class PeticionBOImpl implements PeticionBO {
 						pdfFilenet.setMsgEstado(hmap.get("Filenet").getInputJson());
 					} else {
 
-						pdfS3.setIndExito("S");
-						pdfS3.setCodEstado("0");
-						pdfS3.setMsgEstado("Documento Subido a Filenet");
-						pdfS3.setRutaURLDestinoPDF(hmap.get("Filenet").getInputJson());
+						pdfFilenet.setIndExito("S");
+						pdfFilenet.setCodEstado("0");
+						pdfFilenet.setMsgEstado("Documento Subido a Filenet");
 					}
 
 				}
@@ -378,15 +500,13 @@ public class PeticionBOImpl implements PeticionBO {
 				if (cabIn.getDetalleFilenet().getIndTXT().getIndFilenetTXT().equals("S")) {
 
 					if (hmap.get("Filenet").isIndError()) {
-						txtS3.setIndExito("N");
-						txtS3.setCodEstado("-1");
-						txtS3.setMsgEstado("Documento No Subido a Filenet");
-						txtS3.setRutaURLDestinoTXT(hmap.get("Filenet").getInputJson());
+						txtFilenet.setIndExito("N");
+						txtFilenet.setCodEstado("-1");
+						txtFilenet.setMsgEstado("Documento No Subido a Filenet");
 					} else {
-						txtS3.setIndExito("S");
-						txtS3.setCodEstado("0");
-						txtS3.setMsgEstado("Documento Subido a Filenet");
-						txtS3.setRutaURLDestinoTXT(hmap.get("Filenet").getInputJson());
+						txtFilenet.setIndExito("S");
+						txtFilenet.setCodEstado("0");
+						txtFilenet.setMsgEstado("Documento Subido a Filenet");
 					}
 
 				}
@@ -394,15 +514,13 @@ public class PeticionBOImpl implements PeticionBO {
 				if (cabIn.getDetalleFilenet().getIndHTML().getIndFilenetHTML().equals("S")) {
 
 					if (hmap.get("Filenet").isIndError()) {
-						htmlS3.setIndExito("N");
-						htmlS3.setCodEstado("-1");
-						htmlS3.setMsgEstado("Documento No Subido a Filenet");
-						htmlS3.setRutaURLDestinoHTML(hmap.get("Filenet").getInputJson());
+						htmlFilenet.setIndExito("N");
+						htmlFilenet.setCodEstado("-1");
+						htmlFilenet.setMsgEstado("Documento No Subido a Filenet");
 					} else {
-						htmlS3.setIndExito("S");
-						htmlS3.setCodEstado("0");
-						htmlS3.setMsgEstado("Documento Subido a Filenet");
-						htmlS3.setRutaURLDestinoHTML(hmap.get("Filenet").getInputJson());
+						htmlFilenet.setIndExito("S");
+						htmlFilenet.setCodEstado("0");
+						htmlFilenet.setMsgEstado("Documento Subido a Filenet");
 					}
 
 				}
@@ -424,181 +542,132 @@ public class PeticionBOImpl implements PeticionBO {
 		} catch (Exception e) {
 			logger.error("ERROR FileNet {}", e);
 		}
-
-		/*********************************************
-		 * ENVIO RUTA COMPARTIDA
-		 *********************************************/
+		/**************************************************
+		 * DETALLE SERVICIO LOCAL
+		 ************************************************/
 
 		AlmacenamientoLocal almLocal = new AlmacenamientoLocal();
 
 		IndPDF_AlmcLocal pdfLocal = new IndPDF_AlmcLocal();
 		IndTXT_AlmcLocal txtLocal = new IndTXT_AlmcLocal();
 		IndHTML_AlmcLocal htmlLocal = new IndHTML_AlmcLocal();
-
 		try {
 
-			pdfLocal.setIndLocalPDF(sol.getCabecera().getDetalleFilenet().getIndPDF().getIndFilenetPDF());
+			pdfLocal.setIndLocalPDF(sol.getCabecera().getDetalleLocal().getIndPDF().getIndLocalPDF());
+			logger.debug("PDF LOCAL", sol.getCabecera().getDetalleLocal().getIndPDF().getIndLocalPDF());
 
-		} catch (Exception e) {
-			logger.error("ERROR AlmacenamientoLocal {}", e);
-		}
+			txtLocal.setIndLocalTXT(sol.getCabecera().getDetalleLocal().getIndTXT().getIndLocalTXT());
+			logger.debug("TXT LOCAL", sol.getCabecera().getDetalleLocal().getIndTXT().getIndLocalTXT());
 
-		/**********************************************
-		 * ENVIO A TRAZABILIDAD
-		 *********************************************/
+			htmlLocal.setIndLocalHTML(sol.getCabecera().getDetalleLocal().getIndHTML().getIndLocalHTML());
+			logger.debug("HTML LOCAL", sol.getCabecera().getDetalleLocal().getIndHTML().getIndLocalHTML());
 
-		DetalleTrazabilidad detTraz = new DetalleTrazabilidad();
+			if (hmap.get("CopiaLocal") != null) {
+				logger.debug("JSON Loal: {}", hmap.get("Local"));
 
-		try {
-			detTraz.setIndTrazabilidad(sol.getCabecera().getDetalleTrazabilidadCorreo().getIndTrazabilidad());
-			logger.debug("INDTRAZABILIDAD: {}", sol.getCabecera().getDetalleTrazabilidadCorreo().getIndTrazabilidad());
+				if (cabIn.getDetalleLocal().getIndPDF().getIndLocalPDF().equals("S")) {
 
-			if (hmap.get("Trazabilidad") != null) {
-
-				logger.debug("TRAZABILIDAD");
-
-				if (cabIn.getDetalleTrazabilidadCorreo().getIndTrazabilidad().equals("S")) {
-
-					if (hmap.get("Trazabilidad").isIndError()) {
-
-						detTraz.setIndExito("N");
-						detTraz.setCodEstado("-1");
-						detTraz.setMsgEstado("Trazabilidad no realizada");
-						detTraz.setValorretorno(hmap.get("Trazabilidad").getInputJson());
-
+					if (hmap.get("CopiaLocal").isIndError()) {
+						pdfLocal.setIndExito("N");
+						pdfLocal.setCodEstado("-1");
+						pdfLocal.setMsgEstado(hmap.get("CopiaLocal").getInputJson());
 					} else {
 
-						detTraz.setIndExito("S");
-						detTraz.setCodEstado("0");
-						detTraz.setMsgEstado("Trazabilidad realizada");
-						detTraz.setValorretorno(hmap.get("Trazabilidad").getInputJson());
+						pdfLocal.setIndExito("S");
+						pdfLocal.setCodEstado("0");
+						pdfLocal.setMsgEstado("Documento Guardardo a Local");
 					}
 
 				}
 
-			}
+				if (cabIn.getDetalleLocal().getIndTXT().getIndLocalTXT().equals("S")) {
 
-			cabecera.setDetalleTrazabilidad(detTraz);
-
-		} catch (Exception e) {
-
-			logger.error("ERROR TRAZABILIDAD {}", e);
-
-		}
-
-		/***************************************************************
-		 * DETALLE DEL SERVICIO GENERICO
-		 *************************************************************/
-
-		DetalleServicio detServ = new DetalleServicio();
-
-		try {
-			detServ.setIndServicio(sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
-			logger.debug("IND SERVICIO: {}", sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
-
-			if (hmap.get("ServicioGenerico") != null) {
-
-				logger.debug("SERVICIO GENERICO");
-				if (cabIn.getDetalleServicioGenerico().getIndServicioGenerico().equals("S")) {
-
-					if (hmap.get("ServicioGenerico").isIndError()) {
-						detServ.setIndExito("N");
-						detServ.setCodEstado("-1");
-						detServ.setMsgEstado("Servicio Genérico no realizado");
-						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+					if (hmap.get("CopiaLocal").isIndError()) {
+						txtLocal.setIndExito("N");
+						txtLocal.setCodEstado("-1");
+						txtLocal.setMsgEstado("Documento TXT No guardado en Local");
 					} else {
-						detServ.setIndExito("S");
-						detServ.setCodEstado("0");
-						detServ.setMsgEstado("Servicio Genérico realizado");
-						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+						txtLocal.setIndExito("S");
+						txtLocal.setCodEstado("0");
+						txtLocal.setMsgEstado("Documento TXT guardado en Local");
 					}
 
 				}
 
-			}
+				if (cabIn.getDetalleLocal().getIndHTML().getIndLocalHTML().equals("S")) {
 
-			cabecera.setDetalleServicio(detServ);
-			logger.debug("DETSERV: {}", detServ);
+					if (hmap.get("CopiaLocal").isIndError()) {
+						htmlLocal.setIndEstado("N");
+						htmlLocal.setCodEstado("-1");
+						htmlLocal.setMsgEstado("Documento HTML No guardado en Local");
+					} else {
+						htmlLocal.setIndEstado("S");
+						htmlLocal.setCodEstado("0");
+						htmlLocal.setMsgEstado("Documento HTML guardado en Local");
+					}
 
-		} catch (Exception e) {
-
-			logger.error("ERROR SERVICIO GENERICO {}", e);
-
-		}
-
-		/***********************************
-		 * + DETALLE DEL ENVIO A SMS
-		 ***********************************/
-
-		DetalleSMS detSMS = new DetalleSMS();
-		DetalleRespuesta[] detresp = null;
-		try {
-
-			detSMS.setIndSMS(sol.getCabecera().getDetalleSMS().getIndSMS());
-			logger.debug("IND SERVICIO: {}", sol.getCabecera().getDetalleSMS().getIndSMS());
-			if (cabIn.getDetalleSMS().getIndSMS().equals("S")) {
-
-				if (hmap.get("detalleSMS").isIndError()) {
-					detSMS.setIndSMS("N");
-					DetalleRespuesta det = new DetalleRespuesta();
-
-					detSMS.setNumeroRespuesta(detresp);
-				} else {
-					detSMS.setIndSMS("S");
-					
 				}
 
+				almLocal.setIndPDF(pdfLocal);
+				logger.debug("PDF_LOCAL: {}", txtLocal);
+
+				almLocal.setIndTXT(txtLocal);
+				logger.debug("TXT_LOCAL: {}", txtLocal);
+
+				almLocal.setIndHTML(htmlLocal);
+				logger.debug("HTML_LOCAL: {}", txtLocal);
+
+				cabecera.setAlmacenamientoLocal(almLocal);
+				logger.debug("ALMACENAMIENTO LOCAL {}", almLocal);
+
 			}
-			cabecera.setEnvioSMS(detSMS);
-			logger.debug("ENVIO SMS: {}", detSMS);
 
 		} catch (Exception e) {
-
-			logger.error("ERROR SMS {}", e);
+			logger.error("ERROR ALMACENAMIENTO LOCAL {}", e);
 		}
+
 		/***************************************************************
 		 * DETALLE DEL SERVICIO correo
 		 *************************************************************/
 
-		DetalleCorreoIN detCorreo = new DetalleCorreoIN();
+		DetalleCorreo detCorreo = new DetalleCorreo();
 
 		try {
 			detCorreo.setIndCorreo((sol.getCabecera().getDetalleCorreo().getIndCorreo()));
 			logger.debug("IND CORREO: {}", sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
 
-			if (hmap.get("ServicioGenerico") != null) {
+			if (hmap.get("Solicitado") != null) {
+				logger.debug("JSON DetalleCorreo: {}", hmap.get("Solicitado"));
 
-				logger.debug("SERVICIO GENERICO");
-				if (cabIn.getDetalleServicioGenerico().getIndServicioGenerico().equals("S")) {
+				if (cabIn.getDetalleCorreo().getIndCorreo().equals("S")) {
 
-					if (hmap.get("ServicioGenerico").isIndError()) {
-						detServ.setIndExito("N");
-						detServ.setCodEstado("-1");
-						detServ.setMsgEstado("Servicio Genérico no realizado");
-						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+					if (hmap.get("Solicitado").isIndError()) {
+						detCorreo.setIndExito("N");
+						detCorreo.setCodEstado("-1");
+						detCorreo.setMsgEstado("NO SE ENVIO EL CORREO");
 					} else {
-						detServ.setIndExito("S");
-						detServ.setCodEstado("0");
-						detServ.setMsgEstado("Servicio Genérico realizado");
-						detServ.setValorretorno(hmap.get("ServicioGenerico").getInputJson());
+
+						detCorreo.setIndExito("S");
+						detCorreo.setCodEstado("0");
+						detCorreo.setMsgEstado("CORREO ENVIADO CON EXITO");
 					}
 
 				}
-
 			}
 
-			cabecera.setDetalleServicio(detServ);
-			logger.debug("DETSERV: {}", detServ);
+			cabecera.setDetalleCorreo(detCorreo);
+			logger.debug("DETALLE CORREO: {}", detCorreo);
 
 		} catch (Exception e) {
 
-			logger.error("ERROR SERVICIO GENERICO {}", e);
+			logger.error("ERROR SERVICIO Correo {}", e);
 
 		}
-
+		/***********************************
+		************************************/
 		respuesta.setCabecera(cabecera);
 		logger.debug("CABECERA: {}", cabecera);
-
+		logger.debug("SEESPERARDERESPUESTA : ", respuesta.getCabecera());
 		respuesta.setNumOperacion(solicitud.getNumOperacion());
 
 		if (peticion.isIndError()) {
@@ -607,7 +676,7 @@ public class PeticionBOImpl implements PeticionBO {
 			respuesta.setEstado(peticion.getNomfase());
 		}
 
-		logger.debug("Respuesta {}", respuesta);
+		logger.debug("RespuestaFINAL {}", respuesta);
 		return respuesta;
 	}
 

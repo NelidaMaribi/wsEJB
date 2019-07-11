@@ -29,13 +29,9 @@ public class AlmacenamientoLocal  implements Serializable{
 	public void setIndHTML(IndHTML_AlmcLocal indHTML) {
 		this.indHTML = indHTML;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	@Override
-	public String toString() {
-		return "AlmacenamientoLocal [indPDF=" + indPDF + ", indTXT=" + indTXT + ", indHTML=" + indHTML + "]";
-	}
+
+	
+	
 	
 	
 }
