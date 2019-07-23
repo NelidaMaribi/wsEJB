@@ -115,7 +115,7 @@ public class CommunicationServerBOImpl implements CommunicationServerBO {
 		conn.setRequestProperty("otdsticket", rptaToken.getTicket());
 
 		JsonNode jsonInput = mapper.readTree(solicitud);
-
+		
 		String sistema = jsonInput.get("origen").get("sistema").asText();
 		String plantilla = "";
 		plantilla = jsonInput.get("cabecera").get("detallePDF").get("codigoPlantilla").asText();

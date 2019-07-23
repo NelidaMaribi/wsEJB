@@ -44,6 +44,7 @@ import pe.soapros.generacionccm.beans.IndPDF_AlmcS3;
 import pe.soapros.generacionccm.beans.IndTXT_AlmcLocal;
 import pe.soapros.generacionccm.beans.IndTXT_AlmcS3;
 import pe.soapros.generacionccm.beans.PeticionOUT;
+import pe.soapros.generacionccm.beans.ResponseDetalleLocal;
 import pe.soapros.generacionccm.beans.ResponseS3;
 import pe.soapros.generacionccm.beans.Respuesta;
 import pe.soapros.generacionccm.beans.Solicitud;
@@ -573,9 +574,15 @@ public class PeticionBOImpl implements PeticionBO {
 						pdfLocal.setMsgEstado(hmap.get("CopiaLocal").getInputJson());
 					} else {
 
+						ResponseDetalleLocal[] responseLC = mapper.readValue(hmap.get("CopiaLocal").getInputJson(), ResponseDetalleLocal[].class);
+						logger.debug("Response Local[0] {}", responseLC[0].toString());
+
+					
 						pdfLocal.setIndExito("S");
 						pdfLocal.setCodEstado("0");
-						pdfLocal.setMsgEstado("Documento Guardardo a Local");
+						pdfLocal.setMsgEstado("Se guardo correctamente");
+						pdfLocal.setRutaDestinoPDF(responseLC[0].getArchivo());
+						
 					}
 
 				}
@@ -587,9 +594,13 @@ public class PeticionBOImpl implements PeticionBO {
 						txtLocal.setCodEstado("-1");
 						txtLocal.setMsgEstado("Documento TXT No guardado en Local");
 					} else {
+						ResponseDetalleLocal[] responseLC = mapper.readValue(hmap.get("CopiaLocal").getInputJson(), ResponseDetalleLocal[].class);
+						logger.debug("Response Local[0] {}", responseLC[0].toString());
+						
 						txtLocal.setIndExito("S");
 						txtLocal.setCodEstado("0");
-						txtLocal.setMsgEstado("Documento TXT guardado en Local");
+						txtLocal.setMsgEstado("Se guardo correctamente");
+						txtLocal.setRutaDestinoTxt(responseLC[1].getArchivo());
 					}
 
 				}
@@ -601,9 +612,13 @@ public class PeticionBOImpl implements PeticionBO {
 						htmlLocal.setCodEstado("-1");
 						htmlLocal.setMsgEstado("Documento HTML No guardado en Local");
 					} else {
+						ResponseDetalleLocal[] responseLC = mapper.readValue(hmap.get("CopiaLocal").getInputJson(), ResponseDetalleLocal[].class);
+						logger.debug("Response Local[0] {}", responseLC[0].toString());
+						
 						htmlLocal.setIndEstado("S");
 						htmlLocal.setCodEstado("0");
-						htmlLocal.setMsgEstado("Documento HTML guardado en Local");
+						htmlLocal.setMsgEstado("Se guardo correctamente");
+						htmlLocal.setRutaDestinoHTML(responseLC[2].getArchivo());
 					}
 
 				}

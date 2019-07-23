@@ -2575,7 +2575,7 @@ public class RegistrarRespuestaController {
 
 					PropiedadesFilenetPdf = indPDFFilenet.get("propiedades");
 
-					fileNetTxt.setPropiedades(PropiedadesFilenetTxt);
+					fileNetPdf.setPropiedades(PropiedadesFilenetPdf);
 
 					logger.debug("PROPIEDADESOBTENIDASFILENETTXT{}", indPDFFilenet.get("propiedades"));
 
@@ -2595,6 +2595,7 @@ public class RegistrarRespuestaController {
 				}
 				if (indPDFFilenet.has("contentStream")) {
 					contentStreamFilenetPdf = indPDFFilenet.get("contentStream");
+					fileNetPdf.setContentStream(contentStreamFilenetPdf);
 					logger.debug("CONTENTSTREAM{}", indPDFFilenet.get("contentStream"));
 				} else {
 
@@ -2708,7 +2709,7 @@ public class RegistrarRespuestaController {
 
 					PropiedadesFilenetTxt = indTXTFilenet.get("propiedades");
 
-					 fileNetTxt.setPropiedades(PropiedadesFilenetTxt);
+					fileNetTxt.setPropiedades(PropiedadesFilenetTxt);
 
 					logger.debug("PROPIEDADESOBTENIDASFILENETTXT{}", indTXTFilenet.get("propiedades"));
 
@@ -2728,6 +2729,7 @@ public class RegistrarRespuestaController {
 				}
 				if (indTXTFilenet.has("contentStream")) {
 					contentStreamFileneTxt = indTXTFilenet.get("contentStream");
+					fileNetTxt.setContentStream(contentStreamFileneTxt);
 					logger.debug("CONTENTSTREAM{}", indTXTFilenet.get("contentStream"));
 				} else {
 
@@ -2862,6 +2864,7 @@ public class RegistrarRespuestaController {
 				}
 				if (indHTMLFilenet.has("contentStream")) {
 					contentStreamFilenetHtml = indHTMLFilenet.get("contentStream");
+					fileNetHtml.setContentStream(contentStreamFilenetHtml);
 					logger.debug("CONTENTSTREAM{}", indHTMLFilenet.get("contentStream"));
 				} else {
 
