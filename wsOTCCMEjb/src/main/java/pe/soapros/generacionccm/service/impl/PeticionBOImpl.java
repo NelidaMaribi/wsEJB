@@ -188,13 +188,13 @@ public class PeticionBOImpl implements PeticionBO {
 
 		// boolean swSeguir = true;
 
-		if (hmap.get("Generacion") != null) {
+		if (hmap.get("Solicitado") != null) {
 
 			logger.debug("DOCUMENTOS GENERADOS");
 
 			if (cabIn.getDetallePDF().getIndPDF().equals("S")) {
 
-				if (hmap.get("Generacion").isIndError()) {
+				if (hmap.get("Solicitado").isIndError()) {
 					detPDF.setIndExito("N");
 					detPDF.setCodEstado("-1");
 					detPDF.setMsgEstado("DOCUMENTOS NO GENERADOS");
@@ -208,7 +208,7 @@ public class PeticionBOImpl implements PeticionBO {
 
 			if (cabIn.getDetalleTXT().getIndTXT().equals("S")) {
 
-				if (hmap.get("Generacion").isIndError()) {
+				if (hmap.get("Solicitado").isIndError()) {
 					detTXT.setIndExito("N");
 					detTXT.setCodEstado("-1");
 					detTXT.setMsgEstado("DOCUMENTOS NO GENERADOS");
@@ -222,7 +222,7 @@ public class PeticionBOImpl implements PeticionBO {
 
 			if (cabIn.getDetalleHTML().getIndHTML().equals("S")) {
 
-				if (hmap.get("Generacion").isIndError()) {
+				if (hmap.get("Solicitado").isIndError()) {
 					detHTML.setIndExito("N");
 					detHTML.setCodEstado("-1");
 					detHTML.setMsgEstado("DOCUMENTOS NO GENERADOS");
@@ -340,7 +340,7 @@ public class PeticionBOImpl implements PeticionBO {
 
 			dets_g.setIndServicio(sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
 			logger.debug("IND SERVICIO: {}", sol.getCabecera().getDetalleServicioGenerico().getIndServicioGenerico());
-			if (cabIn.getDetalleSMS().getIndSMS().equals("S")) {
+			if (cabIn.getDetalleServicioGenerico().getIndServicioGenerico().equals("S")) {
 
 				if (hmap.get("ServicioGenerico").isIndError()) {
 					dets_g.setIndExito("N");
